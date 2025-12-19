@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gmp.h>
+#include <assert.h>
 #include <string>
-#include <stdexcept>
 
 
 static mpz_t q;
@@ -12,6 +12,7 @@ static mpz_t one;
 static mpz_t mask;
 static size_t nBits;
 static bool initialized = false;
+
 
 void Fr_toMpz(mpz_t r, PFrElement pE) {
     FrElement tmp;
@@ -65,9 +66,8 @@ char *Fr_element2str(PFrElement pE) {
     mpz_t r;
     if (!(pE->type & Fr_LONG)) {
         if (pE->shortVal>=0) {
-            const size_t rLn = 32;
-            char *r = new char[rLn];
-            snprintf(r, rLn, "%d", pE->shortVal);
+            char *r = new char[32];
+            sprintf(r, "%d", pE->shortVal);
             return r;
         } else {
             mpz_init_set_si(r, pE->shortVal);
@@ -163,11 +163,10 @@ void Fr_div(PFrElement r, PFrElement a, PFrElement b) {
 }
 
 void Fr_fail() {
-    throw std::runtime_error("Fr error");
+    assert(false);
 }
 
-void Fr_longErr()
-{
+void Fr_longErr() {
     Fr_fail();
 }
 
@@ -300,8 +299,8 @@ int RawFr::toRprBE(const Element &element, uint8_t *data, int bytes)
     mpz_init(r);
 
     toMpz(r, element);
-
-    mpz_export(data, NULL, 1, 8, 1, 0, r);
+   
+    mpz_export(data, NULL, 1, bytes, 1, 0, r);
 
     return Fr_N64 * 8;
 }
@@ -322,3 +321,4 @@ int RawFr::fromRprBE(Element &element, const uint8_t *data, int bytes)
 static bool init = Fr_init();
 
 RawFr RawFr::field;
+
