@@ -353,7 +353,11 @@ Fr_longNeg:
 Fr_longErr:
         push    rdi
         mov     rdi, 0
-        call    Fr_fail
+%ifdef PIC
+        call    Fr_fail WRT ..plt       ; PIC-aware PLT call
+%else
+        call    Fr_fail                 ; Direct call
+%endif
         pop     rdi
         mov rsp, rbp
         pop rdx
