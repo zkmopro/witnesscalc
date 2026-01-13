@@ -210,6 +210,9 @@ build_android_x86_64()
 
 build_ios()
 {
+    # Clear any inherited compiler variables that interfere with xcrun detection
+    unset CC CXX CPP CXXCPP AR NM RANLIB STRIP
+
     PACKAGE_DIR="$GMP_DIR/package_ios_arm64"
     BUILD_DIR=build_ios_arm64
 
@@ -251,6 +254,9 @@ build_ios()
 
 build_ios_simulator()
 {
+    # Clear any inherited compiler variables that interfere with xcrun detection
+    unset CC CXX CPP CXXCPP AR NM RANLIB STRIP
+
 	libs=()
 	for ARCH in "arm64" "x86_64"; do
 		case "$ARCH" in
@@ -294,6 +300,9 @@ build_ios_simulator()
 
 build_macos_arch()
 {
+  # Clear any inherited compiler variables that interfere with xcrun detection
+  unset CC CXX CPP CXXCPP AR NM RANLIB STRIP
+
   ARCH="$1"
   case "$ARCH" in
     "arm64" )
